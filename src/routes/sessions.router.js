@@ -6,12 +6,24 @@ const router = Router();
 router.post('/register', async (req, res) => {
     if(!req.body) return;
 
+    const formatEmail =  req.body.email.trim();
+    const formatPassword =  req.body.password.trim();
+
+    const isAdmin = (email, password) => {
+        if(email === "adminCoder@coder.com" && password === "adminCod3r123"){
+            return true;
+        } else {
+            return false;
+        };
+    };
+
     const newUser = {
         first_name: req.body.first_name.trim(),
-        last_name: req.body. last_name.trim(),
+        last_name: req.body.last_name.trim(),
         email: req.body.email.trim(),
         age: Number(req.body.age),
         password: req.body.password.trim(),
+        admin: isAdmin(formatEmail, formatPassword),
     };
 
     try{
@@ -34,12 +46,7 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({"status": "error", "message": "Invalid email or password. Please make sure your email and password are correct."});
         };
 
-        if(email === "adminCoder@coder.com" && password === "adminCod3r123"){
-            req.session.user = user;
-            req.session.admin = true;
-        }else{
-            req.session.user = user;
-        };
+        req.session.user = user;
 
         res.status(200).json({"status": "success", "message": `Welcome: ${user.first_name}`});
     }catch(error){

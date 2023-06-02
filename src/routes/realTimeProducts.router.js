@@ -38,11 +38,13 @@ const realTimeProductsRouter = (socketServer) => {
     });
 
     const authAdmin = (req, res, next) => {
-        if(req.session.admin){
+        if(req.session.user.admin){
             return next();
-        }else if(!req.session.admin){
+        }else if(!req.session.user.admin){
+            res.status(401).send('Access Denegade');
+        } else {
             res.redirect('/sessions/login');
-        };
+        }
     };
 
     // Render view
